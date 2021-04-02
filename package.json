@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha tests",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "npm run build && node build/index.js",
+    "lint": "eslint '**/*.{js,ts}'"
   },
   "keywords": [
     "Xendit"
@@ -25,6 +26,13 @@
     "@types/node": "^14.14.37",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
     "mocha": "^6.1.4",
     "rimraf": "^3.0.2",
     "supertest": "^4.0.2",
