@@ -1,12 +1,12 @@
 'use strict';
 
+const ITEMS_PER_PAGE = require("./constants").ITEMS_PER_PAGE;
+
 const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-
-const ITEMS_PER_PAGE = 2;
 
 module.exports = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
