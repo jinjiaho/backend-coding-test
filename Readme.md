@@ -33,7 +33,7 @@ Example Response: `Healthy`
 
 ### GET /rides
 
-GET /rides takes in an optional parameter `page` and returns an array of results.
+GET /rides takes in an optional parameter `page` and returns an array of results with length not exceeding the preset number of items per page. If `page` is undefined, default to 1.
 
 Query params: `{ page: number }`
 Example Response:
