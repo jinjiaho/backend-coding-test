@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
+var ITEMS_PER_PAGE = 2;
 module.exports = function (db) {
     app.get('/health', function (req, res) { return res.send('Healthy'); });
     app.post('/rides', jsonParser, function (req, res) {
@@ -63,7 +64,10 @@ module.exports = function (db) {
         });
     });
     app.get('/rides', function (req, res) {
-        db.all('SELECT * FROM Rides', function (err, rows) {
+        var page = req.query.page || 1;
+        var after = (page - 1) * ITEMS_PER_PAGE;
+        console.log(page, after);
+        db.all("SELECT * FROM Rides ORDER BY rideID LIMIT " + ITEMS_PER_PAGE + (after ? ", " + after : ''), function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: 'SERVER_ERROR',

@@ -6,6 +6,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
+const ITEMS_PER_PAGE = 2;
+
 module.exports = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
 
@@ -77,7 +79,9 @@ module.exports = (db) => {
     });
 
     app.get('/rides', (req, res) => {
-        db.all('SELECT * FROM Rides', function (err, rows) {
+        const page = req.query.page || 1;
+        const after = (page - 1) * ITEMS_PER_PAGE;
+        db.all(`SELECT * FROM Rides ORDER BY rideID LIMIT ${ITEMS_PER_PAGE}${after ? `, ${after}` : ''}`, function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: 'SERVER_ERROR',
