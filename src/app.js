@@ -1,5 +1,7 @@
 'use strict';
 
+const ITEMS_PER_PAGE = require("./constants").ITEMS_PER_PAGE;
+
 const express = require('express');
 const app = express();
 
@@ -77,7 +79,9 @@ module.exports = (db) => {
     });
 
     app.get('/rides', (req, res) => {
-        db.all('SELECT * FROM Rides', function (err, rows) {
+        const page = Number(req.query.page) || 1;
+        const after = (page - 1) * ITEMS_PER_PAGE;
+        db.all(`SELECT * FROM Rides ORDER BY rideID LIMIT ${ITEMS_PER_PAGE}${after ? `, ${after}` : ''}`, function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: 'SERVER_ERROR',

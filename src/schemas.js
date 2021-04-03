@@ -18,5 +18,14 @@ module.exports = (db) => {
 
     db.run(createRideTableSchema);
 
+    const populate = `
+        INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES 
+            (50, 100, 60, 120, "Jim", "Jam", "SGD1000K"), 
+            (60, 120, 70, 140, "Tim", "Tam", "SGD1000M"), 
+            (70, 140, 80, 160, "Mic", "Mac", "SGD1000B");
+    `
+
+    db.run(populate);
+
     return db;
 };

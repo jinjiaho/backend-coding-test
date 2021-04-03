@@ -1,4 +1,5 @@
 'use strict';
+var ITEMS_PER_PAGE = require("./constants").ITEMS_PER_PAGE;
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -63,7 +64,9 @@ module.exports = function (db) {
         });
     });
     app.get('/rides', function (req, res) {
-        db.all('SELECT * FROM Rides', function (err, rows) {
+        var page = req.query.page || 1;
+        var after = (page - 1) * ITEMS_PER_PAGE;
+        db.all("SELECT * FROM Rides ORDER BY rideID LIMIT " + ITEMS_PER_PAGE + (after ? ", " + after : ''), function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: 'SERVER_ERROR',
