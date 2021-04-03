@@ -79,7 +79,7 @@ module.exports = (db) => {
     });
 
     app.get('/rides', (req, res) => {
-        const page = req.query.page || 1;
+        const page = Number(req.query.page) || 1;
         const after = (page - 1) * ITEMS_PER_PAGE;
         db.all(`SELECT * FROM Rides ORDER BY rideID LIMIT ${ITEMS_PER_PAGE}${after ? `, ${after}` : ''}`, function (err, rows) {
             if (err) {
