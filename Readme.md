@@ -71,13 +71,13 @@ POST /rides takes in ride details and saves it in the database, returning an arr
 Example body:
 
 ```{
-    "start_lat": 40,
-    "start_long": 100,
-    "end_lat": 60,
-    "end_long": 160,
-    "rider_name": "Tim",
-    "driver_name": "Tam",
-    "driver_vehicle": "SGD1000K"
+    "start_lat": 40,              // -90 <= start_lat <= 90
+    "start_long": 100,            // -180 <= start_long <= 180
+    "end_lat": 60,                // -90 <= end_lat <= 90
+    "end_long": 160,              // -180 <= end_long <= 180
+    "rider_name": "Tim",          // Must be non-empty
+    "driver_name": "Tam",         // Must be non-empty
+    "driver_vehicle": "SGD1000K"  // Must be non-empty
 }
 ```
 
@@ -94,6 +94,28 @@ Example response:
         "driverName": "Tam",
         "driverVehicle": "SGD1000K",
         "created": "2021-04-03 09:24:03"
+    }
+]
+```
+
+### GET /rides/:id
+
+GET /rides/:id gets a ride by id.
+
+Example query: `GET http://localhost:8010/rides/3`
+Example response:
+
+```[
+    {
+        "rideID": 3,
+        "startLat": 70,
+        "startLong": 140,
+        "endLat": 80,
+        "endLong": 160,
+        "riderName": "Mic",
+        "driverName": "Mac",
+        "driverVehicle": "SGD1000B",
+        "created": "2021-04-03 11:10:18"
     }
 ]
 ```
