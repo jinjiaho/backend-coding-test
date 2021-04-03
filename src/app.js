@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const { getRides, getRideById, saveRide } = require('./db');
+const { validateInt, validateLat, validateLong, validateName, validateVehicle } = require('./utils');
 
 module.exports = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
@@ -40,7 +41,7 @@ module.exports = (db) => {
 
     app.get('/rides', async (req, res) => {
         try {
-            const page = req.query.page || 1;
+            const page = Number(req.query.page) || 1;
             await validateInt(page, 'Page');
             const rows = await getRides(db, page);
             res.send(rows);
@@ -61,75 +62,3 @@ module.exports = (db) => {
 
     return app;
 };
-
-const validateInt = (id, name) => {
-    return new Promise((resolve, reject) => {
-        if (isNaN(parseInt(id))) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: `${name} must be an integer`
-            })
-        }
-        resolve();
-    })
-}
-
-const validateLat = (value, startOrEnd)  => {
-    return new Promise((resolve, reject) => {
-        if (value < -90 || value > 90) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: `${startOrEnd} latitude must be between -90 - 90 degrees`
-            });
-        }
-        resolve();
-    })
-}
-
-const validateLong = (value, startOrEnd) => {
-    return new Promise((resolve, reject) => {
-        if (value < -180 || value > 180) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: `${startOrEnd} longitude must be between -180 - 180 degrees`
-            });
-        }
-        resolve();
-    })
-}
-
-const validateName = (string, person) => {
-    return new Promise((resolve, reject) => {
-        if (string.length < 1) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: `${person} name must be a non empty string`
-            })
-        }
-        if (!string.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: `${person} name is an invalid input`
-            })
-        }
-        resolve();
-    })
-}
-
-const validateVehicle = (string) => {
-    return new Promise((resolve, reject) => {
-        if (string.length < 1) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: 'Vehicle must be a non empty string'
-            })
-        }
-        if (!string.match(/^[a-zA-Z0-9]+$/u)) {
-            reject({
-                error_code: 'VALIDATION_ERROR',
-                message: 'Vehicle is an invalid input'
-            })
-        }
-        resolve();
-    })
-}
