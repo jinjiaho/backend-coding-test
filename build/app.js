@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var ITEMS_PER_PAGE = require("./constants").ITEMS_PER_PAGE;
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -81,12 +80,10 @@ module.exports = function (db) {
                     return [4 /*yield*/, saveRide(db, values)];
                 case 8:
                     rows = _a.sent();
-                    console.log(rows);
                     res.send(rows);
                     return [3 /*break*/, 10];
                 case 9:
                     err_1 = _a.sent();
-                    console.log(err_1);
                     return [2 /*return*/, res.send(err_1)];
                 case 10: return [2 /*return*/];
             }
@@ -97,17 +94,20 @@ module.exports = function (db) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    page = Number(req.query.page) || 1;
-                    return [4 /*yield*/, getRides(db, page)];
+                    _a.trys.push([0, 3, , 4]);
+                    page = req.query.page || 1;
+                    return [4 /*yield*/, validateInt(page, 'Page')];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, getRides(db, page)];
+                case 2:
                     rows = _a.sent();
                     res.send(rows);
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     err_2 = _a.sent();
                     return [2 /*return*/, res.send(err_2)];
-                case 3: return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
     }); });
@@ -116,20 +116,34 @@ module.exports = function (db) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, getRideById(db, Number(req.params.id))];
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, validateInt(req.params.id, 'Ride ID')];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, getRideById(db, Number(req.params.id))];
+                case 2:
                     rows = _a.sent();
                     res.send(rows);
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     err_3 = _a.sent();
                     return [2 /*return*/, res.send(err_3)];
-                case 3: return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
     }); });
     return app;
+};
+var validateInt = function (id, name) {
+    return new Promise(function (resolve, reject) {
+        if (isNaN(parseInt(id))) {
+            reject({
+                error_code: 'VALIDATION_ERROR',
+                message: name + " must be an integer"
+            });
+        }
+        resolve();
+    });
 };
 var validateLat = function (value, startOrEnd) {
     return new Promise(function (resolve, reject) {
